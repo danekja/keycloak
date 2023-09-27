@@ -23,7 +23,6 @@
         </preConditions>
         <addPrimaryKey columnNames="REALM_ID,GROUP_ID" constraintName="CONSTR_REALM_DEFAULT_GROUPS" tableName="REALM_DEFAULT_GROUPS"/>
 
-        <addPrimaryKey columnNames="ID" constraintName="CONSTRAINT_ADMIN_EVENT_ENTITY" tableName="ADMIN_EVENT_ENTITY"/>
         <addPrimaryKey columnNames="ID" constraintName="CONSTRAINT_CREDENTIAL_ATTR" tableName="CREDENTIAL_ATTRIBUTE"/>
         <addPrimaryKey columnNames="ID" constraintName="CONSTRAINT_FED_CREDENTIAL_ATTR" tableName="FED_CREDENTIAL_ATTRIBUTE"/>
 
