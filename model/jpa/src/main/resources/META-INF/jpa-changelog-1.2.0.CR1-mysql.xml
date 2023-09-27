@@ -17,15 +17,13 @@
   -->
 
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
-    <changeSet author="bburke@redhat.com" id="1.2.0.RC1">
-        <validCheckSum>7:0f08df48468428e0f30ee59a8ec01a41</validCheckSum>
+    <changeSet author="jakub.danek@yoso.fi" id="1.2.0.RC1-1">
+
         <preConditions onSqlOutput="TEST" onFail="MARK_RAN">
             <not>
-                <dbms type="db2" />
+                <changeSetExecuted id="1.2.0.RC1" author="bburke@redhat.com" changeLogFile="META-INF/jpa-changelog-1.2.0.CR1.xml"/>
             </not>
-            <not>
-                <dbms type="mysql" />
-            </not>
+            <dbms type="mysql" />
         </preConditions>
 
         <delete tableName="CLIENT_SESSION_ROLE"/>
@@ -33,10 +31,19 @@
         <delete tableName="CLIENT_SESSION"/>
         <delete tableName="USER_SESSION_NOTE"/>
         <delete tableName="USER_SESSION"/>
+    </changeSet>
+    <changeSet author="jakub.danek@yoso.fi" id="1.2.0.RC1-2">
+
+        <preConditions onSqlOutput="TEST" onFail="MARK_RAN">
+            <not>
+                <changeSetExecuted id="1.2.0.RC1" author="bburke@redhat.com" changeLogFile="META-INF/jpa-changelog-1.2.0.CR1.xml"/>
+            </not>
+            <dbms type="mysql" />
+        </preConditions>
 
         <createTable tableName="MIGRATION_MODEL">
             <column name="ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_MIGMOD"/>
             </column>
             <column name="VERSION" type="VARCHAR(36)">
                 <constraints nullable="true"/>
@@ -45,7 +52,7 @@
 
         <createTable tableName="IDENTITY_PROVIDER_MAPPER">
             <column name="ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_IDPM"/>
             </column>
             <column name="NAME" type="VARCHAR(255)">
                 <constraints nullable="false"/>
@@ -62,11 +69,11 @@
         </createTable>
         <createTable tableName="IDP_MAPPER_CONFIG">
             <column name="IDP_MAPPER_ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_IDPMConfig"/>
             </column>
             <column name="VALUE" type="CLOB"/>
             <column name="NAME" type="VARCHAR(255)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_IDPMConfig"/>
             </column>
         </createTable>
         <addColumn tableName="CREDENTIAL">
@@ -74,7 +81,7 @@
         </addColumn>
         <createTable tableName="USER_CONSENT">
             <column name="ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_GRNTCSNT_PM"/>
             </column>
             <column name="CLIENT_ID" type="VARCHAR(36)">
                 <constraints nullable="false"/>
@@ -85,35 +92,37 @@
         </createTable>
         <createTable tableName="USER_CONSENT_ROLE">
             <column name="USER_CONSENT_ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_GRNTCSNT_ROLE_PM"/>
             </column>
             <column name="ROLE_ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_GRNTCSNT_ROLE_PM"/>
             </column>
         </createTable>
         <createTable tableName="USER_CONSENT_PROT_MAPPER">
             <column name="USER_CONSENT_ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_GRNTCSNT_PRM_PM"/>
             </column>
             <column name="PROTOCOL_MAPPER_ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_GRNTCSNT_PRM_PM"/>
             </column>
         </createTable>
         <createTable tableName="CLIENT_SESSION_PROT_MAPPER">
             <column name="PROTOCOL_MAPPER_ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_CS_PMP_PK"/>
             </column>
             <column name="CLIENT_SESSION" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_CS_PMP_PK"/>
             </column>
         </createTable>
-        <addPrimaryKey columnNames="ID" constraintName="CONSTRAINT_MIGMOD" tableName="MIGRATION_MODEL"/>
-        <addPrimaryKey columnNames="ID" constraintName="CONSTRAINT_IDPM" tableName="IDENTITY_PROVIDER_MAPPER"/>
-        <addPrimaryKey columnNames="IDP_MAPPER_ID, NAME" constraintName="CONSTRAINT_IDPMConfig" tableName="IDP_MAPPER_CONFIG"/>
-        <addPrimaryKey columnNames="ID" constraintName="CONSTRAINT_GRNTCSNT_PM" tableName="USER_CONSENT"/>
-        <addPrimaryKey columnNames="USER_CONSENT_ID, ROLE_ID" constraintName="CONSTRAINT_GRNTCSNT_ROLE_PM" tableName="USER_CONSENT_ROLE"/>
-        <addPrimaryKey columnNames="USER_CONSENT_ID, PROTOCOL_MAPPER_ID" constraintName="CONSTRAINT_GRNTCSNT_PRM_PM" tableName="USER_CONSENT_PROT_MAPPER"/>
-        <addPrimaryKey columnNames="CLIENT_SESSION, PROTOCOL_MAPPER_ID" constraintName="CONSTRAINT_CS_PMP_PK" tableName="CLIENT_SESSION_PROT_MAPPER"/>
+    </changeSet>
+    <changeSet author="jakub.danek@yoso.fi" id="1.2.0.RC1-3">
+
+        <preConditions onSqlOutput="TEST" onFail="MARK_RAN">
+            <not>
+                <changeSetExecuted id="1.2.0.RC1" author="bburke@redhat.com" changeLogFile="META-INF/jpa-changelog-1.2.0.CR1.xml"/>
+            </not>
+            <dbms type="mysql" />
+        </preConditions>
         <addForeignKeyConstraint baseColumnNames="REALM_ID" baseTableName="IDENTITY_PROVIDER_MAPPER" constraintName="FK_IDPM_REALM" referencedColumnNames="ID" referencedTableName="REALM"/>
         <addForeignKeyConstraint baseColumnNames="IDP_MAPPER_ID" baseTableName="IDP_MAPPER_CONFIG" constraintName="FK_IDPMConfig" referencedColumnNames="ID" referencedTableName="IDENTITY_PROVIDER_MAPPER"/>
         <addForeignKeyConstraint baseColumnNames="USER_ID" baseTableName="USER_CONSENT" constraintName="FK_GRNTCSNT_USER" referencedColumnNames="ID" referencedTableName="USER_ENTITY"/>
