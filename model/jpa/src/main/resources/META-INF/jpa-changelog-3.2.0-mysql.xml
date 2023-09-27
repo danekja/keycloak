@@ -17,62 +17,13 @@
   -->
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <!--
-        NOTE that there was an older version of this file containing a bug.
-        The first changeset fixes this bug for those who were able to
-        lucky enough to apply it. 
-        The second changeset is the fixed original changeset.
-    -->
-    
-    <changeSet author="keycloak" id="3.2.0-fix">
-        <validCheckSum>7:550300617e3b59e8af3a6294df8248a3</validCheckSum>
-        <preConditions onFail="MARK_RAN" onSqlOutput="TEST">
-            <changeSetExecuted id="3.2.0" author="keycloak" changeLogFile="META-INF/jpa-changelog-3.2.0.xml"/>
-            <not>
-                <dbms type="mssql"/>
-            </not>
-        </preConditions>
-        
-        <addNotNullConstraint tableName="CLIENT_INITIAL_ACCESS" columnName="REALM_ID" columnDataType="VARCHAR(36)" />
-    </changeSet>
-
-    <changeSet author="keycloak" id="3.2.0-fix-with-keycloak-5416">
-        <validCheckSum>7:e3a9482b8931481dc2772a5c07c44f17</validCheckSum>
-        <preConditions onFail="MARK_RAN" onSqlOutput="TEST">
-            <changeSetExecuted id="3.2.0" author="keycloak" changeLogFile="META-INF/jpa-changelog-3.2.0.xml"/>
-            <dbms type="mssql"/>
-        </preConditions>
-
-        <dropIndex indexName="IDX_CLIENT_INIT_ACC_REALM" tableName="CLIENT_INITIAL_ACCESS"/>
-        <addNotNullConstraint tableName="CLIENT_INITIAL_ACCESS" columnName="REALM_ID" columnDataType="VARCHAR(36)" />
-        <createIndex indexName="IDX_CLIENT_INIT_ACC_REALM" tableName="CLIENT_INITIAL_ACCESS">
-            <column name="REALM_ID" type="VARCHAR(36)"/>
-        </createIndex>
-    </changeSet>
-    
-    <changeSet author="hmlnarik" id="3.2.0-fix-offline-sessions">
-        <validCheckSum>7:72b07d85a2677cb257edb02b408f332d</validCheckSum>
-        <preConditions onFail="MARK_RAN" onSqlOutput="TEST">
-            <not>
-                <changeSetExecuted id="3.2.0-fixed" author="keycloak" changeLogFile="META-INF/jpa-changelog-3.2.0.xml"/>
-            </not>
-            <not>
-                <changeSetExecuted id="3.2.0" author="keycloak" changeLogFile="META-INF/jpa-changelog-3.2.0.xml"/>
-            </not>
-        </preConditions>
-        
-        <customChange class="org.keycloak.connections.jpa.updater.liquibase.custom.RemoveDuplicateOfflineSessions" />
-    </changeSet>
-
     <changeSet author="keycloak" id="3.2.0-fixed">
         <validCheckSum>7:a72a7858967bd414835d19e04d880312</validCheckSum>
         <preConditions onFail="MARK_RAN" onSqlOutput="TEST">
             <not>
                 <changeSetExecuted id="3.2.0" author="keycloak" changeLogFile="META-INF/jpa-changelog-3.2.0.xml"/>
             </not>
-            <not>
-                <dbms type="mysql" />
-            </not>
+            <dbms type="mysql" />
         </preConditions>
         
         <addColumn tableName="REALM">
@@ -87,7 +38,7 @@
 
         <createTable tableName="CLIENT_INITIAL_ACCESS">
             <column name="ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CNSTR_CLIENT_INIT_ACC_PK"/>
             </column>
             <column name="REALM_ID" type="VARCHAR(36)">
                 <constraints nullable="false"/>
@@ -99,7 +50,6 @@
             <column name="REMAINING_COUNT" type="INT"/>
         </createTable>
 
-        <addPrimaryKey columnNames="ID" constraintName="CNSTR_CLIENT_INIT_ACC_PK" tableName="CLIENT_INITIAL_ACCESS"/>
         <addForeignKeyConstraint baseColumnNames="REALM_ID" baseTableName="CLIENT_INITIAL_ACCESS" constraintName="FK_CLIENT_INIT_ACC_REALM" referencedColumnNames="ID" referencedTableName="REALM"/>
 
         <createIndex indexName="IDX_ASSOC_POL_ASSOC_POL_ID" tableName="ASSOCIATED_POLICY">
