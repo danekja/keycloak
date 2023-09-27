@@ -18,18 +18,17 @@
 
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-     <changeSet author="bburke@redhat.com" id="2.3.0">
-         <validCheckSum>7:d6e6f3bc57a0c5586737d1351725d4d4</validCheckSum>
-
+     <changeSet author="jakub.danek@yoso.fi" id="2.3.0-1">
          <preConditions onSqlOutput="TEST" onFail="MARK_RAN">
              <not>
-                <dbms type="mysql" />
+                 <changeSetExecuted id="2.3.0" author="bburke@redhat.com" changeLogFile="META-INF/jpa-changelog-2.3.0.xml"/>
              </not>
+             <dbms type="mysql" />
          </preConditions>
 
         <createTable tableName="FEDERATED_USER">
             <column name="ID" type="VARCHAR(255)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTR_FEDERATED_USER"/>
             </column>
             <column name="STORAGE_PROVIDER_ID" type="VARCHAR(255)">
             </column>
@@ -37,7 +36,14 @@
                 <constraints nullable="false" />
             </column>
         </createTable>
-         <addPrimaryKey columnNames="ID" constraintName="CONSTR_FEDERATED_USER" tableName="FEDERATED_USER"/>
+     </changeSet>
+    <changeSet author="jakub.danek@yoso.fi" id="2.3.0-2">
+        <preConditions onSqlOutput="TEST" onFail="MARK_RAN">
+            <not>
+                <changeSetExecuted id="2.3.0" author="bburke@redhat.com" changeLogFile="META-INF/jpa-changelog-2.3.0.xml"/>
+            </not>
+            <dbms type="mysql" />
+        </preConditions>
 
          <dropDefaultValue tableName="USER_ENTITY" columnName="TOTP" />
          <dropColumn tableName="USER_ENTITY" columnName="TOTP" />
