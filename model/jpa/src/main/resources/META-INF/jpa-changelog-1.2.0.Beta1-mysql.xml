@@ -180,9 +180,11 @@
 
         <createTable tableName="REALM_ENABLED_EVENT_TYPES">
             <column name="REALM_ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTR_REALM_ENABL_EVENT_TYPES"/>
             </column>
-            <column name="VALUE" type="VARCHAR(255)"/>
+            <column name="VALUE" type="VARCHAR(255)">
+                <constraints primaryKey="true" primaryKeyName="CONSTR_REALM_ENABL_EVENT_TYPES"/>
+            </column>
         </createTable>
         <addForeignKeyConstraint baseColumnNames="REALM_ID" baseTableName="REALM_ENABLED_EVENT_TYPES" constraintName="FK_H846O4H0W8EPX5NWEDRF5Y69J" referencedColumnNames="ID" referencedTableName="REALM"/>
     </changeSet>
