@@ -22,7 +22,6 @@
             <dbms type="mysql" />
         </preConditions>
         <addPrimaryKey columnNames="REALM_ID,GROUP_ID" constraintName="CONSTR_REALM_DEFAULT_GROUPS" tableName="REALM_DEFAULT_GROUPS"/>
-        <addPrimaryKey columnNames="CLIENT_ID,IDENTITY_PROVIDER_ID" constraintName="CONSTR_CLIENT_IDEN_PROV_MAP" tableName="CLIENT_IDENTITY_PROV_MAPPING"/>
 
         <addPrimaryKey columnNames="ID" constraintName="CONSTRAINT_ADMIN_EVENT_ENTITY" tableName="ADMIN_EVENT_ENTITY"/>
         <addPrimaryKey columnNames="ID" constraintName="CONSTRAINT_CREDENTIAL_ATTR" tableName="CREDENTIAL_ATTRIBUTE"/>
@@ -32,13 +31,11 @@
         <addForeignKeyConstraint baseColumnNames="CLIENT_ID" baseTableName="CLIENT_DEFAULT_ROLES" constraintName="FK_NUILTS7KLWQW2H8M2B5JOYTKY" referencedColumnNames="ID" referencedTableName="CLIENT"/>
 
         <addNotNullConstraint tableName="REALM_ENABLED_EVENT_TYPES" columnName="VALUE" columnDataType="VARCHAR(255)" />
-        <addPrimaryKey columnNames="REALM_ID,VALUE" constraintName="CONSTR_REALM_ENABL_EVENT_TYPES" tableName="REALM_ENABLED_EVENT_TYPES"/>
         
         <addNotNullConstraint tableName="REALM_EVENTS_LISTENERS" columnName="VALUE" columnDataType="VARCHAR(255)" />
 
         <addNotNullConstraint tableName="REALM_SUPPORTED_LOCALES" columnName="VALUE" columnDataType="VARCHAR(255)" />
-        <addPrimaryKey columnNames="REALM_ID,VALUE" constraintName="CONSTR_REALM_SUPPORTED_LOCALES" tableName="REALM_SUPPORTED_LOCALES"/>
-        
+
         <addNotNullConstraint tableName="REDIRECT_URIS" columnName="VALUE" columnDataType="VARCHAR(255)" />
 
         <addNotNullConstraint tableName="WEB_ORIGINS" columnName="VALUE" columnDataType="VARCHAR(255)" />
