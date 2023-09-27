@@ -17,34 +17,32 @@
   -->
 
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
-    <changeSet author="sthorger@redhat.com" id="1.0.0.Final-KEYCLOAK-5461">
-        <validCheckSum>7:4e70412f24a3f382c82183742ec79317</validCheckSum>
+    <changeSet author="jakub.danek@yoso.fi" id="1.0.0.Final-1">
         <preConditions onSqlOutput="TEST" onFail="MARK_RAN">
             <not>
                 <changeSetExecuted id="1.0.0.Final" author="sthorger@redhat.com" changeLogFile="META-INF/jpa-changelog-1.0.0.Final.xml"/>
             </not>
             <not>
-                <dbms type="db2" />
+                <changeSetExecuted id="1.0.0.Final-KEYCLOAK-5461" author="sthorger@redhat.com" changeLogFile="META-INF/jpa-changelog-1.0.0.Final.xml"/>
             </not>
-            <not>
-                <dbms type="mysql" />
-            </not>
+            <dbms type="mysql" />
         </preConditions>
 
         <createTable tableName="APPLICATION_DEFAULT_ROLES">
             <column name="APPLICATION_ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTR_CLIENT_DEFAULT_ROLES"/>
             </column>
             <column name="ROLE_ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTR_CLIENT_DEFAULT_ROLES"/>
             </column>
+
         </createTable>
         <createTable tableName="CLIENT">
             <column name="DTYPE" type="VARCHAR(31)">
                 <constraints nullable="false"/>
             </column>
             <column name="ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_7"/>
             </column>
             <column name="ALLOWED_CLAIMS_MASK" type="BIGINT"/>
             <column name="ENABLED" type="BOOLEAN" defaultValueBoolean="false">
@@ -74,7 +72,7 @@
         </createTable>
         <createTable tableName="CLIENT_SESSION">
             <column name="ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_8"/>
             </column>
             <column name="ACTION" type="INT"/>
             <column name="CLIENT_ID" type="VARCHAR(36)"/>
@@ -85,23 +83,23 @@
         </createTable>
         <createTable tableName="CLIENT_SESSION_ROLE">
             <column name="ROLE_ID" type="VARCHAR(255)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_5"/>
             </column>
             <column name="CLIENT_SESSION" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_5"/>
             </column>
         </createTable>
         <createTable tableName="COMPOSITE_ROLE">
             <column name="COMPOSITE" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_COMPOSITE_ROLE"/>
             </column>
             <column name="CHILD_ROLE" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_COMPOSITE_ROLE"/>
             </column>
         </createTable>
         <createTable tableName="CREDENTIAL">
             <column name="ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_F"/>
             </column>
             <column name="DEVICE" type="VARCHAR(255)"/>
             <column name="HASH_ITERATIONS" type="INT"/>
@@ -112,7 +110,7 @@
         </createTable>
         <createTable tableName="EVENT_ENTITY">
             <column name="ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_4"/>
             </column>
             <column name="CLIENT_ID" type="VARCHAR(255)"/>
             <column name="DETAILS_JSON" type="VARCHAR(2550)"/>
@@ -125,6 +123,10 @@
             <column name="USER_ID" type="VARCHAR(255)"/>
         </createTable>
         <createTable tableName="FED_PROVIDERS">
+            <!-- new PK, table dropped in 1.9.0 without ever having a PK-->
+            <column name="PK_ID" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
             <column name="REALM_ID" type="VARCHAR(36)">
                 <constraints nullable="false"/>
             </column>
@@ -134,7 +136,7 @@
         </createTable>
         <createTable tableName="KEYCLOAK_ROLE">
             <column name="ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_A"/>
             </column>
             <column name="APP_REALM_CONSTRAINT" type="VARCHAR(36)"/>
             <column name="APPLICATION_ROLE" type="BOOLEAN" defaultValueBoolean="false">
@@ -148,7 +150,7 @@
         </createTable>
         <createTable tableName="REALM">
             <column name="ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_4A"/>
             </column>
             <column name="ACCESS_CODE_LIFESPAN" type="INT"/>
             <column name="USER_ACTION_LIFESPAN" type="INT"/>
@@ -196,6 +198,10 @@
             <column name="MASTER_ADMIN_APP" type="VARCHAR(36)"/>
         </createTable>
         <createTable tableName="REALM_APPLICATION">
+            <!-- new PK, table dropped in 1.9.0 (named as REALM_CLIENT) without ever having a PK-->
+            <column name="PK_ID" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
             <column name="APPLICATION_ID" type="VARCHAR(36)">
                 <constraints nullable="false"/>
             </column>
@@ -205,30 +211,32 @@
         </createTable>
         <createTable tableName="REALM_ATTRIBUTE">
             <column name="NAME" type="VARCHAR(255)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_9"/>
             </column>
             <column name="VALUE" type="VARCHAR(255)"/>
             <column name="REALM_ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_9"/>
             </column>
         </createTable>
         <createTable tableName="REALM_DEFAULT_ROLES">
             <column name="REALM_ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_REALM_DEFAULT_ROLES"/>
             </column>
             <column name="ROLE_ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_REALM_DEFAULT_ROLES"/>
             </column>
         </createTable>
         <createTable tableName="REALM_EVENTS_LISTENERS">
             <column name="REALM_ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTR_REALM_EVENTS_LISTENERS"/>
             </column>
-            <column name="VALUE" type="VARCHAR(255)"/>
+            <column name="VALUE" type="VARCHAR(255)">
+                <constraints primaryKey="true" primaryKeyName="CONSTR_REALM_EVENTS_LISTENERS"/>
+            </column>
         </createTable>
         <createTable tableName="REALM_REQUIRED_CREDENTIAL">
             <column name="TYPE" type="VARCHAR(255)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_92"/>
             </column>
             <column name="FORM_LABEL" type="VARCHAR(255)"/>
             <column name="INPUT" type="BOOLEAN" defaultValueBoolean="false">
@@ -238,47 +246,49 @@
                 <constraints nullable="false"/>
             </column>
             <column name="REALM_ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_92"/>
             </column>
         </createTable>
         <createTable tableName="REALM_SMTP_CONFIG">
             <column name="REALM_ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_E"/>
             </column>
             <column name="VALUE" type="VARCHAR(255)"/>
             <column name="NAME" type="VARCHAR(255)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_E"/>
             </column>
         </createTable>
         <createTable tableName="REALM_SOCIAL_CONFIG">
             <column name="REALM_ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_1"/>
             </column>
             <column name="VALUE" type="VARCHAR(255)"/>
             <column name="NAME" type="VARCHAR(255)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_1"/>
             </column>
         </createTable>
         <createTable tableName="REDIRECT_URIS">
             <column name="CLIENT_ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_REDIRECT_URIS"/>
             </column>
-            <column name="VALUE" type="VARCHAR(255)"/>
+            <column name="VALUE" type="VARCHAR(255)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_REDIRECT_URIS"/>
+            </column>
         </createTable>
         <createTable tableName="SCOPE_MAPPING">
             <column name="CLIENT_ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_81"/>
             </column>
             <column name="ROLE_ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_81"/>
             </column>
         </createTable>
         <createTable tableName="USERNAME_LOGIN_FAILURE">
             <column name="REALM_ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_17"/>
             </column>
             <column name="USERNAME" type="VARCHAR(200)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_17"/>
             </column>
             <column name="FAILED_LOGIN_NOT_BEFORE" type="INT"/>
             <column name="LAST_FAILURE" type="BIGINT"/>
@@ -287,16 +297,16 @@
         </createTable>
         <createTable tableName="USER_ATTRIBUTE">
             <column name="NAME" type="VARCHAR(255)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_6"/>
             </column>
             <column name="VALUE" type="VARCHAR(255)"/>
             <column name="USER_ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_6"/>
             </column>
         </createTable>
         <createTable tableName="USER_ENTITY">
             <column name="ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_FB"/>
             </column>
             <column name="EMAIL" type="VARCHAR(255)"/>
             <column name="EMAIL_CONSTRAINT" type="VARCHAR(255)"/>
@@ -317,16 +327,16 @@
         </createTable>
         <createTable tableName="USER_FEDERATION_CONFIG">
             <column name="USER_FEDERATION_PROVIDER_ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_F9"/>
             </column>
             <column name="VALUE" type="VARCHAR(255)"/>
             <column name="NAME" type="VARCHAR(255)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_F9"/>
             </column>
         </createTable>
         <createTable tableName="USER_FEDERATION_PROVIDER">
             <column name="ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_5C"/>
             </column>
             <column name="CHANGED_SYNC_PERIOD" type="INT"/>
             <column name="DISPLAY_NAME" type="VARCHAR(255)"/>
@@ -338,23 +348,23 @@
         </createTable>
         <createTable tableName="USER_REQUIRED_ACTION">
             <column name="ACTION" type="INT">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_2"/>
             </column>
             <column name="USER_ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_2"/>
             </column>
         </createTable>
         <createTable tableName="USER_ROLE_MAPPING">
             <column name="ROLE_ID" type="VARCHAR(255)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_C"/>
             </column>
             <column name="USER_ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_C"/>
             </column>
         </createTable>
         <createTable tableName="USER_SESSION">
             <column name="ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_57"/>
             </column>
             <column name="AUTH_METHOD" type="VARCHAR(255)"/>
             <column name="IP_ADDRESS" type="VARCHAR(255)"/>
@@ -369,42 +379,34 @@
         </createTable>
         <createTable tableName="USER_SOCIAL_LINK">
             <column name="SOCIAL_PROVIDER" type="VARCHAR(255)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_3"/>
             </column>
             <column name="REALM_ID" type="VARCHAR(255)"/>
             <column name="SOCIAL_USER_ID" type="VARCHAR(255)"/>
             <column name="SOCIAL_USERNAME" type="VARCHAR(255)"/>
             <column name="USER_ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_3"/>
             </column>
         </createTable>
         <createTable tableName="WEB_ORIGINS">
             <column name="CLIENT_ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_WEB_ORIGINS"/>
             </column>
-            <column name="VALUE" type="VARCHAR(255)"/>
+            <column name="VALUE" type="VARCHAR(255)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_WEB_ORIGINS"/>
+            </column>
         </createTable>
-        <addPrimaryKey columnNames="REALM_ID, NAME" constraintName="CONSTRAINT_1" tableName="REALM_SOCIAL_CONFIG"/>
-        <addPrimaryKey columnNames="REALM_ID, USERNAME" constraintName="CONSTRAINT_17" tableName="USERNAME_LOGIN_FAILURE"/>
-        <addPrimaryKey columnNames="ACTION, USER_ID" constraintName="CONSTRAINT_2" tableName="USER_REQUIRED_ACTION"/>
-        <addPrimaryKey columnNames="SOCIAL_PROVIDER, USER_ID" constraintName="CONSTRAINT_3" tableName="USER_SOCIAL_LINK"/>
-        <addPrimaryKey columnNames="ID" constraintName="CONSTRAINT_4" tableName="EVENT_ENTITY"/>
-        <addPrimaryKey columnNames="ID" constraintName="CONSTRAINT_4A" tableName="REALM"/>
-        <addPrimaryKey columnNames="CLIENT_SESSION, ROLE_ID" constraintName="CONSTRAINT_5" tableName="CLIENT_SESSION_ROLE"/>
-        <addPrimaryKey columnNames="ID" constraintName="CONSTRAINT_57" tableName="USER_SESSION"/>
-        <addPrimaryKey columnNames="ID" constraintName="CONSTRAINT_5C" tableName="USER_FEDERATION_PROVIDER"/>
-        <addPrimaryKey columnNames="NAME, USER_ID" constraintName="CONSTRAINT_6" tableName="USER_ATTRIBUTE"/>
-        <addPrimaryKey columnNames="ID" constraintName="CONSTRAINT_7" tableName="CLIENT"/>
-        <addPrimaryKey columnNames="ID" constraintName="CONSTRAINT_8" tableName="CLIENT_SESSION"/>
-        <addPrimaryKey columnNames="CLIENT_ID, ROLE_ID" constraintName="CONSTRAINT_81" tableName="SCOPE_MAPPING"/>
-        <addPrimaryKey columnNames="NAME, REALM_ID" constraintName="CONSTRAINT_9" tableName="REALM_ATTRIBUTE"/>
-        <addPrimaryKey columnNames="REALM_ID, TYPE" constraintName="CONSTRAINT_92" tableName="REALM_REQUIRED_CREDENTIAL"/>
-        <addPrimaryKey columnNames="ID" constraintName="CONSTRAINT_A" tableName="KEYCLOAK_ROLE"/>
-        <addPrimaryKey columnNames="ROLE_ID, USER_ID" constraintName="CONSTRAINT_C" tableName="USER_ROLE_MAPPING"/>
-        <addPrimaryKey columnNames="REALM_ID, NAME" constraintName="CONSTRAINT_E" tableName="REALM_SMTP_CONFIG"/>
-        <addPrimaryKey columnNames="ID" constraintName="CONSTRAINT_F" tableName="CREDENTIAL"/>
-        <addPrimaryKey columnNames="USER_FEDERATION_PROVIDER_ID, NAME" constraintName="CONSTRAINT_F9" tableName="USER_FEDERATION_CONFIG"/>
-        <addPrimaryKey columnNames="ID" constraintName="CONSTRAINT_FB" tableName="USER_ENTITY"/>
+    </changeSet>
+    <changeSet author="jakub.danek@yoso.fi" id="1.0.0.Final-2">
+        <preConditions onSqlOutput="TEST" onFail="MARK_RAN">
+            <not>
+                <changeSetExecuted id="1.0.0.Final" author="sthorger@redhat.com" changeLogFile="META-INF/jpa-changelog-1.0.0.Final.xml"/>
+            </not>
+            <not>
+                <changeSetExecuted id="1.0.0.Final-KEYCLOAK-5461" author="sthorger@redhat.com" changeLogFile="META-INF/jpa-changelog-1.0.0.Final.xml"/>
+            </not>
+            <dbms type="mysql" />
+        </preConditions>
         <addUniqueConstraint columnNames="ROLE_ID" constraintName="UK_8AELWNIBJI49AVXSRTUF6XJOW" tableName="APPLICATION_DEFAULT_ROLES"/>
         <addUniqueConstraint columnNames="REALM_ID,NAME" constraintName="UK_B71CJLBENV945RB6GCON438AT" tableName="CLIENT"/>
         <addUniqueConstraint columnNames="USERFEDERATIONPROVIDERS_ID" constraintName="UK_DCCIRJLIPU1478VQC89DID88C" tableName="FED_PROVIDERS"/>
