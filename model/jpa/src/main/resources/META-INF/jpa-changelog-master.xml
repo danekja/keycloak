@@ -50,6 +50,7 @@
 
     <include file="META-INF/jpa-changelog-authz-master.xml"/>
     <include file="META-INF/jpa-changelog-2.1.0.xml"/>
+    <include file="META-INF/jpa-changelog-2.1.0-mysql.xml"/>
     <include file="META-INF/jpa-changelog-2.2.0.xml"/>
     <include file="META-INF/jpa-changelog-2.3.0.xml"/>
     <include file="META-INF/jpa-changelog-2.4.0.xml"/>
