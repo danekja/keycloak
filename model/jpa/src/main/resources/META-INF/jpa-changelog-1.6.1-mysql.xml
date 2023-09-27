@@ -24,9 +24,7 @@
             <not>
                 <changeSetExecuted id="1.6.0" author="mposolda@redhat.com" changeLogFile="META-INF/jpa-changelog-1.6.0.xml" />
             </not>
-            <not>
-                <dbms type="mysql" />
-            </not>
+            <dbms type="mysql" />
         </preConditions>
 
         <addColumn tableName="REALM">
@@ -49,7 +47,7 @@
 
         <createTable tableName="OFFLINE_USER_SESSION">
             <column name="USER_SESSION_ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_OFFL_US_SES_PK2"/>
             </column>
             <column name="USER_ID" type="VARCHAR(36)">
                 <constraints nullable="false"/>
@@ -59,14 +57,14 @@
             </column>
             <column name="LAST_SESSION_REFRESH" type="INT"/>
             <column name="OFFLINE_FLAG" type="VARCHAR(4)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_OFFL_US_SES_PK2"/>
             </column>
             <column name="DATA" type="CLOB"/>
         </createTable>
 
         <createTable tableName="OFFLINE_CLIENT_SESSION">
             <column name="CLIENT_SESSION_ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_OFFL_CL_SES_PK2"/>
             </column>
             <column name="USER_SESSION_ID" type="VARCHAR(36)">
                 <constraints nullable="false"/>
@@ -75,72 +73,11 @@
                 <constraints nullable="false"/>
             </column>
             <column name="OFFLINE_FLAG" type="VARCHAR(4)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_OFFL_CL_SES_PK2"/>
             </column>
             <column name="TIMESTAMP" type="INT"/>
             <column name="DATA" type="CLOB"/>
         </createTable>
-
-        <addPrimaryKey columnNames="USER_SESSION_ID, OFFLINE_FLAG" constraintName="CONSTRAINT_OFFL_US_SES_PK2" tableName="OFFLINE_USER_SESSION"/>
-        <addPrimaryKey columnNames="CLIENT_SESSION_ID, OFFLINE_FLAG" constraintName="CONSTRAINT_OFFL_CL_SES_PK2" tableName="OFFLINE_CLIENT_SESSION"/>
-    </changeSet>
-
-    <!-- KEYCLOAK-2404 - just for the update from 1.6.0 BUT not 1.6.1 or newer -->
-    <changeSet author="mposolda@redhat.com" id="1.6.1_from16-pre">
-        <validCheckSum>7:980ba23cc0ec39cab731ce903dd01291</validCheckSum>
-
-        <preConditions onFail="MARK_RAN" onFailMessage="Skipped 1.6.1_from16-pre changeSet and marked as ran" onSqlOutput="TEST">
-            <and>
-                <changeSetExecuted id="1.6.0" author="mposolda@redhat.com" changeLogFile="META-INF/jpa-changelog-1.6.0.xml" />
-                <not>
-                    <changeSetExecuted id="1.6.1" author="mposolda@redhat.com" changeLogFile="META-INF/jpa-changelog-1.6.1.xml"/>
-                </not>
-            </and>
-        </preConditions>
-
-        <delete tableName="OFFLINE_CLIENT_SESSION"/>
-        <delete tableName="OFFLINE_USER_SESSION"/>
-    
-    </changeSet>
-
-    <!-- Just for the update from 1.6.0 -->
-    <changeSet author="mposolda@redhat.com" id="1.6.1_from16">
-        <validCheckSum>7:2fa220758991285312eb84f3b4ff5336</validCheckSum>
-
-        <preConditions onFail="MARK_RAN" onFailMessage="Upgrading from 1.5.0 or older version. Skipped 1.6.1_from16 changeSet and marked as ran" onSqlOutput="TEST">
-            <changeSetExecuted id="1.6.0" author="mposolda@redhat.com" changeLogFile="META-INF/jpa-changelog-1.6.0.xml" />
-        </preConditions>
-
-        <dropPrimaryKey constraintName="CONSTRAINT_OFFLINE_US_SES_PK" tableName="OFFLINE_USER_SESSION" />
-        <dropPrimaryKey constraintName="CONSTRAINT_OFFLINE_CL_SES_PK" tableName="OFFLINE_CLIENT_SESSION" />
-
-        <addColumn tableName="OFFLINE_USER_SESSION">
-            <column name="OFFLINE_FLAG" type="VARCHAR(4)">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-        <update tableName="OFFLINE_USER_SESSION">
-            <column name="OFFLINE_FLAG" value="1"/>
-        </update>
-        <dropColumn tableName="OFFLINE_USER_SESSION" columnName="OFFLINE" />
-
-        <addColumn tableName="OFFLINE_CLIENT_SESSION">
-            <column name="OFFLINE_FLAG" type="VARCHAR(4)">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-        <update tableName="OFFLINE_CLIENT_SESSION">
-            <column name="OFFLINE_FLAG" value="1"/>
-        </update>
-        <dropColumn tableName="OFFLINE_CLIENT_SESSION" columnName="OFFLINE" />
-
-        <addPrimaryKey columnNames="USER_SESSION_ID, OFFLINE_FLAG" constraintName="CONSTRAINT_OFFL_US_SES_PK2" tableName="OFFLINE_USER_SESSION"/>
-        <addPrimaryKey columnNames="CLIENT_SESSION_ID, OFFLINE_FLAG" constraintName="CONSTRAINT_OFFL_CL_SES_PK2" tableName="OFFLINE_CLIENT_SESSION"/>
-
-    </changeSet>
-
-    <changeSet author="mposolda@redhat.com" id="1.6.1">
-        <validCheckSum>7:d41d8cd98f00b204e9800998ecf8427e</validCheckSum>
     </changeSet>
 
 </databaseChangeLog>
