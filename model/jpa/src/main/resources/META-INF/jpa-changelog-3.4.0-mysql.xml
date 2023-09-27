@@ -18,14 +18,9 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet author="keycloak" id="3.4.0">
-        <validCheckSum>7:0f88b78b7b46480eb92690cbf5e44900</validCheckSum>
         <preConditions onSqlOutput="TEST" onFail="MARK_RAN">
-            <not>
-                <dbms type="mysql" />
-            </not>
+            <dbms type="mysql" />
         </preConditions>
-        <addPrimaryKey columnNames="REALM_ID,ROLE_ID" constraintName="CONSTRAINT_REALM_DEFAULT_ROLES" tableName="REALM_DEFAULT_ROLES"/>
-        <addPrimaryKey columnNames="COMPOSITE,CHILD_ROLE" constraintName="CONSTRAINT_COMPOSITE_ROLE" tableName="COMPOSITE_ROLE"/>
         <addPrimaryKey columnNames="REALM_ID,GROUP_ID" constraintName="CONSTR_REALM_DEFAULT_GROUPS" tableName="REALM_DEFAULT_GROUPS"/>
         <addPrimaryKey columnNames="CLIENT_ID,IDENTITY_PROVIDER_ID" constraintName="CONSTR_CLIENT_IDEN_PROV_MAP" tableName="CLIENT_IDENTITY_PROV_MAPPING"/>
 
@@ -34,23 +29,19 @@
         <addPrimaryKey columnNames="ID" constraintName="CONSTRAINT_FED_CREDENTIAL_ATTR" tableName="FED_CREDENTIAL_ATTRIBUTE"/>
 
         <dropForeignKeyConstraint baseTableName="CLIENT_DEFAULT_ROLES" constraintName="FK_NUILTS7KLWQW2H8M2B5JOYTKY" />
-        <addPrimaryKey columnNames="CLIENT_ID,ROLE_ID" constraintName="CONSTR_CLIENT_DEFAULT_ROLES" tableName="CLIENT_DEFAULT_ROLES"/>
         <addForeignKeyConstraint baseColumnNames="CLIENT_ID" baseTableName="CLIENT_DEFAULT_ROLES" constraintName="FK_NUILTS7KLWQW2H8M2B5JOYTKY" referencedColumnNames="ID" referencedTableName="CLIENT"/>
 
         <addNotNullConstraint tableName="REALM_ENABLED_EVENT_TYPES" columnName="VALUE" columnDataType="VARCHAR(255)" />
         <addPrimaryKey columnNames="REALM_ID,VALUE" constraintName="CONSTR_REALM_ENABL_EVENT_TYPES" tableName="REALM_ENABLED_EVENT_TYPES"/>
         
         <addNotNullConstraint tableName="REALM_EVENTS_LISTENERS" columnName="VALUE" columnDataType="VARCHAR(255)" />
-        <addPrimaryKey columnNames="REALM_ID,VALUE" constraintName="CONSTR_REALM_EVENTS_LISTENERS" tableName="REALM_EVENTS_LISTENERS"/>
-        
+
         <addNotNullConstraint tableName="REALM_SUPPORTED_LOCALES" columnName="VALUE" columnDataType="VARCHAR(255)" />
         <addPrimaryKey columnNames="REALM_ID,VALUE" constraintName="CONSTR_REALM_SUPPORTED_LOCALES" tableName="REALM_SUPPORTED_LOCALES"/>
         
         <addNotNullConstraint tableName="REDIRECT_URIS" columnName="VALUE" columnDataType="VARCHAR(255)" />
-        <addPrimaryKey columnNames="CLIENT_ID,VALUE" constraintName="CONSTRAINT_REDIRECT_URIS" tableName="REDIRECT_URIS"/>
-        
+
         <addNotNullConstraint tableName="WEB_ORIGINS" columnName="VALUE" columnDataType="VARCHAR(255)" />
-        <addPrimaryKey columnNames="CLIENT_ID,VALUE" constraintName="CONSTRAINT_WEB_ORIGINS" tableName="WEB_ORIGINS"/>
     </changeSet>
 
     <changeSet author="hmlnarik@redhat.com" id="3.4.0-KEYCLOAK-5230">
