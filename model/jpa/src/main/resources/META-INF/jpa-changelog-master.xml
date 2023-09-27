@@ -21,6 +21,7 @@
     <include file="META-INF/jpa-changelog-1.0.0.Final-db2.xml"/>
     <include file="META-INF/jpa-changelog-1.0.0.Final-mysql.xml"/>
     <include file="META-INF/jpa-changelog-1.1.0.Beta1.xml"/>
+    <include file="META-INF/jpa-changelog-1.1.0.Beta1-mysql.xml"/>
     <include file="META-INF/jpa-changelog-1.1.0.Final.xml"/>
     <include file="META-INF/jpa-changelog-1.2.0.Beta1.xml"/>
     <include file="META-INF/jpa-changelog-1.2.0.Beta1-db2.xml"/>
