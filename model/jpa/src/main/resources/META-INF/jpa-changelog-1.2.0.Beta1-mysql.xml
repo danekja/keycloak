@@ -18,14 +18,8 @@
 
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
     <changeSet author="psilva@redhat.com" id="1.2.0.Beta1">
-        <validCheckSum>7:c7a54a1041d58eb3817a4a883b4d4e84</validCheckSum>
         <preConditions onSqlOutput="TEST" onFail="MARK_RAN">
-            <not>
-                <dbms type="db2" />
-            </not>
-            <not>
-                <dbms type="mysql" />
-            </not>
+            <dbms type="mysql" />
         </preConditions>
 
         <delete tableName="CLIENT_SESSION_ROLE"/>
@@ -35,7 +29,7 @@
 
         <createTable tableName="PROTOCOL_MAPPER">
             <column name="ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_PCM"/>
             </column>
             <column name="NAME" type="VARCHAR(255)">
                 <constraints nullable="false"/>
@@ -56,28 +50,28 @@
         </createTable>
         <createTable tableName="PROTOCOL_MAPPER_CONFIG">
             <column name="PROTOCOL_MAPPER_ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_PMConfig"/>
             </column>
             <column name="VALUE" type="CLOB"/>
             <column name="NAME" type="VARCHAR(255)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_PMConfig"/>
             </column>
         </createTable>
         <createTable tableName="FEDERATED_IDENTITY">
             <column name="IDENTITY_PROVIDER" type="VARCHAR(255)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_40"/>
             </column>
             <column name="REALM_ID" type="VARCHAR(36)"/>
             <column name="FEDERATED_USER_ID" type="VARCHAR(255)"/>
             <column name="FEDERATED_USERNAME" type="VARCHAR(255)"/>
             <column name="TOKEN" type="TEXT"/>
             <column name="USER_ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_40"/>
             </column>
         </createTable>
         <createTable tableName="IDENTITY_PROVIDER">
             <column name="INTERNAL_ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_2B"/>
             </column>
             <column name="ENABLED" type="BOOLEAN" defaultValueBoolean="false">
                 <constraints nullable="false"/>
@@ -97,19 +91,19 @@
         </createTable>
         <createTable tableName="IDENTITY_PROVIDER_CONFIG">
             <column name="IDENTITY_PROVIDER_ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_D"/>
             </column>
             <column name="VALUE" type="CLOB"/>
             <column name="NAME" type="VARCHAR(255)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_D"/>
             </column>
         </createTable>
         <createTable tableName="CLIENT_IDENTITY_PROV_MAPPING">
             <column name="CLIENT_ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTR_CLIENT_IDEN_PROV_MAP"/>
             </column>
             <column name="IDENTITY_PROVIDER_ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTR_CLIENT_IDEN_PROV_MAP"/>
             </column>
             <column name="RETRIEVE_TOKEN" type="BOOLEAN" defaultValueBoolean="false">
                 <constraints nullable="false"/>
@@ -117,16 +111,18 @@
         </createTable>
         <createTable tableName="REALM_SUPPORTED_LOCALES">
             <column name="REALM_ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTR_REALM_SUPPORTED_LOCALES"/>
             </column>
-            <column name="VALUE" type="VARCHAR(255)"/>
+            <column name="VALUE" type="VARCHAR(255)">
+                <constraints primaryKey="true" primaryKeyName="CONSTR_REALM_SUPPORTED_LOCALES"/>
+            </column>
         </createTable>
         <createTable tableName="USER_SESSION_NOTE">
             <column name="USER_SESSION" type="VARCHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_USN_PK"/>
             </column>
             <column name="NAME" type="VARCHAR(255)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_USN_PK"/>
             </column>
             <column name="VALUE" type="VARCHAR(2048)"/>
         </createTable>
@@ -140,12 +136,6 @@
             <column name="BROKER_SESSION_ID" type="VARCHAR(255)" />
             <column name="BROKER_USER_ID" type="VARCHAR(255)" />
         </addColumn>
-        <addPrimaryKey columnNames="ID" constraintName="CONSTRAINT_PCM" tableName="PROTOCOL_MAPPER"/>
-        <addPrimaryKey columnNames="INTERNAL_ID" constraintName="CONSTRAINT_2B" tableName="IDENTITY_PROVIDER"/>
-        <addPrimaryKey columnNames="IDENTITY_PROVIDER, USER_ID" constraintName="CONSTRAINT_40" tableName="FEDERATED_IDENTITY"/>
-        <addPrimaryKey columnNames="IDENTITY_PROVIDER_ID, NAME" constraintName="CONSTRAINT_D" tableName="IDENTITY_PROVIDER_CONFIG"/>
-        <addPrimaryKey columnNames="PROTOCOL_MAPPER_ID, NAME" constraintName="CONSTRAINT_PMConfig" tableName="PROTOCOL_MAPPER_CONFIG"/>
-        <addPrimaryKey columnNames="USER_SESSION, NAME" constraintName="CONSTRAINT_USN_PK" tableName="USER_SESSION_NOTE"/>
         <addForeignKeyConstraint baseColumnNames="REALM_ID" baseTableName="IDENTITY_PROVIDER" constraintName="FK2B4EBC52AE5C3B34" referencedColumnNames="ID" referencedTableName="REALM"/>
         <addForeignKeyConstraint baseColumnNames="CLIENT_ID" baseTableName="PROTOCOL_MAPPER" constraintName="FK_PCM_REALM" referencedColumnNames="ID" referencedTableName="CLIENT"/>
         <addForeignKeyConstraint baseColumnNames="USER_ID" baseTableName="FEDERATED_IDENTITY" constraintName="FK404288B92EF007A6" referencedColumnNames="ID" referencedTableName="USER_ENTITY"/>
