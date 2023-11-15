@@ -19,6 +19,9 @@
 
     <changeSet author="keycloak" id="3.4.0">
         <preConditions onSqlOutput="TEST" onFail="MARK_RAN">
+            <not>
+                <changeSetExecuted id="3.4.0" author="keycloak" changeLogFile="META-INF/jpa-changelog-3.4.0.xml"/>
+            </not>
             <dbms type="mysql" />
         </preConditions>
 
@@ -34,65 +37,6 @@
         <addNotNullConstraint tableName="REDIRECT_URIS" columnName="VALUE" columnDataType="VARCHAR(255)" />
 
         <addNotNullConstraint tableName="WEB_ORIGINS" columnName="VALUE" columnDataType="VARCHAR(255)" />
-    </changeSet>
-
-    <changeSet author="hmlnarik@redhat.com" id="3.4.0-KEYCLOAK-5230">
-        <validCheckSum>7:d560e43982611d936457c327f872dd59</validCheckSum>
-        <createIndex tableName="FED_USER_ATTRIBUTE" indexName="IDX_FU_ATTRIBUTE">
-            <column name="USER_ID" type="VARCHAR(255)" />
-            <column name="REALM_ID" type="VARCHAR(36)" />
-            <column name="NAME" type="VARCHAR(255)" />
-        </createIndex>
-
-        <createIndex tableName="FED_USER_CONSENT" indexName="IDX_FU_CONSENT">
-            <column name="USER_ID" type="VARCHAR(255)" />
-            <column name="CLIENT_ID" type="VARCHAR(36)" />
-        </createIndex>
-
-        <createIndex tableName="FED_USER_CONSENT" indexName="IDX_FU_CONSENT_RU">
-            <column name="REALM_ID" type="VARCHAR(36)" />
-            <column name="USER_ID" type="VARCHAR(255)" />
-        </createIndex>
-
-        <createIndex tableName="FED_USER_CREDENTIAL" indexName="IDX_FU_CREDENTIAL">
-            <column name="USER_ID" type="VARCHAR(255)" />
-            <column name="TYPE" type="VARCHAR(255)" />
-        </createIndex>
-
-        <createIndex tableName="FED_USER_CREDENTIAL" indexName="IDX_FU_CREDENTIAL_RU">
-            <column name="REALM_ID" type="VARCHAR(36)" />
-            <column name="USER_ID" type="VARCHAR(255)" />
-        </createIndex>
-
-        <createIndex tableName="FED_USER_GROUP_MEMBERSHIP" indexName="IDX_FU_GROUP_MEMBERSHIP">
-            <column name="USER_ID" type="VARCHAR(255)" />
-            <column name="GROUP_ID" type="VARCHAR(36)" />
-        </createIndex>
-
-        <createIndex tableName="FED_USER_GROUP_MEMBERSHIP" indexName="IDX_FU_GROUP_MEMBERSHIP_RU">
-            <column name="REALM_ID" type="VARCHAR(36)" />
-            <column name="USER_ID" type="VARCHAR(255)" />
-        </createIndex>
-
-        <createIndex tableName="FED_USER_REQUIRED_ACTION" indexName="IDX_FU_REQUIRED_ACTION">
-            <column name="USER_ID" type="VARCHAR(255)" />
-            <column name="REQUIRED_ACTION" type="VARCHAR(255)" />
-        </createIndex>
-
-        <createIndex tableName="FED_USER_REQUIRED_ACTION" indexName="IDX_FU_REQUIRED_ACTION_RU">
-            <column name="REALM_ID" type="VARCHAR(36)" />
-            <column name="USER_ID" type="VARCHAR(255)" />
-        </createIndex>
-
-        <createIndex tableName="FED_USER_ROLE_MAPPING" indexName="IDX_FU_ROLE_MAPPING">
-            <column name="USER_ID" type="VARCHAR(255)" />
-            <column name="ROLE_ID" type="VARCHAR(36)" />
-        </createIndex>
-
-        <createIndex tableName="FED_USER_ROLE_MAPPING" indexName="IDX_FU_ROLE_MAPPING_RU">
-            <column name="REALM_ID" type="VARCHAR(36)" />
-            <column name="USER_ID" type="VARCHAR(255)" />
-        </createIndex>
     </changeSet>
 
 </databaseChangeLog>
