@@ -17,7 +17,7 @@
   -->
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet author="keycloak" id="4.6.0-KEYCLOAK-8377">
+    <changeSet author="jakub.danek@yoso.fi" id="4.6.0-KEYCLOAK-8377-1">
         <preConditions onSqlOutput="TEST" onFail="MARK_RAN">
             <not>
                 <changeSetExecuted id="4.6.0-KEYCLOAK-8377" author="bburke@redhat.com" changeLogFile="META-INF/jpa-changelog-4.6.0.xml"/>
@@ -37,6 +37,15 @@
             </column>
             <column name="VALUE" type="NVARCHAR(255)"/>
         </createTable>
+    </changeSet>
+    <changeSet author="jakub.danek@yoso.fi" id="4.6.0-KEYCLOAK-8377-2">
+        <preConditions onSqlOutput="TEST" onFail="MARK_RAN">
+            <not>
+                <changeSetExecuted id="4.6.0-KEYCLOAK-8377" author="bburke@redhat.com" changeLogFile="META-INF/jpa-changelog-4.6.0.xml"/>
+            </not>
+            <dbms type="mysql" />
+        </preConditions>
+
         <addForeignKeyConstraint baseColumnNames="ROLE_ID" baseTableName="ROLE_ATTRIBUTE" constraintName="FK_ROLE_ATTRIBUTE_ID" referencedColumnNames="ID" referencedTableName="KEYCLOAK_ROLE"/>
         <createIndex indexName="IDX_ROLE_ATTRIBUTE" tableName="ROLE_ATTRIBUTE">
             <column name="ROLE_ID" type="VARCHAR(36)"/>
