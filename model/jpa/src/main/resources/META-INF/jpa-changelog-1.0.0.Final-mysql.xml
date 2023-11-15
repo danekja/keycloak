@@ -17,10 +17,13 @@
   -->
 
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
-    <changeSet author="sthorger@redhat.com" id="1.0.0.Final-KEYCLOAK-5461">
+    <changeSet author="jakub.danek@yoso.fi" id="1.0.0.Final-1">
         <preConditions onSqlOutput="TEST" onFail="MARK_RAN">
             <not>
                 <changeSetExecuted id="1.0.0.Final" author="sthorger@redhat.com" changeLogFile="META-INF/jpa-changelog-1.0.0.Final.xml"/>
+            </not>
+            <not>
+                <changeSetExecuted id="1.0.0.Final-KEYCLOAK-5461" author="sthorger@redhat.com" changeLogFile="META-INF/jpa-changelog-1.0.0.Final.xml"/>
             </not>
             <dbms type="mysql" />
         </preConditions>
@@ -393,6 +396,17 @@
                 <constraints primaryKey="true" primaryKeyName="CONSTRAINT_WEB_ORIGINS"/>
             </column>
         </createTable>
+    </changeSet>
+    <changeSet author="jakub.danek@yoso.fi" id="1.0.0.Final-2">
+        <preConditions onSqlOutput="TEST" onFail="MARK_RAN">
+            <not>
+                <changeSetExecuted id="1.0.0.Final" author="sthorger@redhat.com" changeLogFile="META-INF/jpa-changelog-1.0.0.Final.xml"/>
+            </not>
+            <not>
+                <changeSetExecuted id="1.0.0.Final-KEYCLOAK-5461" author="sthorger@redhat.com" changeLogFile="META-INF/jpa-changelog-1.0.0.Final.xml"/>
+            </not>
+            <dbms type="mysql" />
+        </preConditions>
         <addUniqueConstraint columnNames="ROLE_ID" constraintName="UK_8AELWNIBJI49AVXSRTUF6XJOW" tableName="APPLICATION_DEFAULT_ROLES"/>
         <addUniqueConstraint columnNames="REALM_ID,NAME" constraintName="UK_B71CJLBENV945RB6GCON438AT" tableName="CLIENT"/>
         <addUniqueConstraint columnNames="USERFEDERATIONPROVIDERS_ID" constraintName="UK_DCCIRJLIPU1478VQC89DID88C" tableName="FED_PROVIDERS"/>
