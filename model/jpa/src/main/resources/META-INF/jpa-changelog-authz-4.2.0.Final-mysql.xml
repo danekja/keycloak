@@ -17,7 +17,7 @@
   -->
 
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
-    <changeSet author="mhajas@redhat.com" id="authz-4.2.0.Final">
+    <changeSet author="jakub.danek@yoso.fi" id="authz-4.2.0.Final-1">
 
         <preConditions onSqlOutput="TEST" onFail="MARK_RAN">
             <not>
@@ -34,6 +34,16 @@
                 <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_RESOUR_URIS_PK"/>
             </column>
         </createTable>
+    </changeSet>
+
+    <changeSet author="jakub.danek@yoso.fi" id="authz-4.2.0.Final-2">
+
+        <preConditions onSqlOutput="TEST" onFail="MARK_RAN">
+            <not>
+                <changeSetExecuted id="authz-4.2.0.Final" author="mhajas@redhat.com" changeLogFile="META-INF/jpa-changelog-authz-4.2.0.Final.xml"/>
+            </not>
+            <dbms type="mysql" />
+        </preConditions>
 
         <addForeignKeyConstraint baseColumnNames="RESOURCE_ID" baseTableName="RESOURCE_URIS" constraintName="FK_RESOURCE_SERVER_URIS" referencedColumnNames="ID" referencedTableName="RESOURCE_SERVER_RESOURCE"/>
 
