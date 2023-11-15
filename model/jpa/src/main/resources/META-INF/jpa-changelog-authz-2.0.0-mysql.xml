@@ -18,7 +18,7 @@
   -->
 
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
-    <changeSet author="psilva@redhat.com" id="authz-2.0.0">
+    <changeSet author="jakub.danek@yoso.fi" id="authz-2.0.0-1">
 
         <preConditions onSqlOutput="TEST" onFail="MARK_RAN">
             <not>
@@ -42,8 +42,6 @@
             </column>
         </createTable>
 
-        <addUniqueConstraint columnNames="CLIENT_ID" constraintName="UK_AU8TT6T700S9V50BU18WS5HA6" tableName="RESOURCE_SERVER"/>
-
         <createTable tableName="RESOURCE_SERVER_RESOURCE">
             <column name="ID" type="VARCHAR(36)">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_FARSR"/>
@@ -62,9 +60,6 @@
             </column>
         </createTable>
 
-        <addForeignKeyConstraint baseColumnNames="RESOURCE_SERVER_ID" baseTableName="RESOURCE_SERVER_RESOURCE" constraintName="FK_FRSRHO213XCX4WNKOG82SSRFY" referencedColumnNames="ID" referencedTableName="RESOURCE_SERVER"/>
-        <addUniqueConstraint columnNames="NAME,OWNER,RESOURCE_SERVER_ID" constraintName="UK_FRSR6T700S9V50BU18WS5HA6" tableName="RESOURCE_SERVER_RESOURCE"/>
-
         <createTable tableName="RESOURCE_SERVER_SCOPE">
             <column name="ID" type="VARCHAR(36)">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_FARSRS"/>
@@ -77,9 +72,6 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-
-        <addForeignKeyConstraint baseColumnNames="RESOURCE_SERVER_ID" baseTableName="RESOURCE_SERVER_SCOPE" constraintName="FK_FRSRSO213XCX4WNKOG82SSRFY" referencedColumnNames="ID" referencedTableName="RESOURCE_SERVER"/>
-        <addUniqueConstraint columnNames="NAME,RESOURCE_SERVER_ID" constraintName="UK_FRSRST700S9V50BU18WS5HA6" tableName="RESOURCE_SERVER_SCOPE"/>
 
         <createTable tableName="RESOURCE_SERVER_POLICY">
             <column name="ID" type="VARCHAR(36)">
@@ -98,10 +90,6 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-
-        <addForeignKeyConstraint baseColumnNames="RESOURCE_SERVER_ID" baseTableName="RESOURCE_SERVER_POLICY" constraintName="FK_FRSRPO213XCX4WNKOG82SSRFY" referencedColumnNames="ID" referencedTableName="RESOURCE_SERVER"/>
-        <addUniqueConstraint columnNames="NAME,RESOURCE_SERVER_ID" constraintName="UK_FRSRPT700S9V50BU18WS5HA6" tableName="RESOURCE_SERVER_POLICY"/>
-
         <createTable tableName="POLICY_CONFIG">
             <column name="POLICY_ID" type="VARCHAR(36)">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_DPC"/>
@@ -112,8 +100,6 @@
             <column name="VALUE" type="CLOB"/>
         </createTable>
 
-        <addForeignKeyConstraint baseColumnNames="POLICY_ID" baseTableName="POLICY_CONFIG" constraintName="FKDC34197CF864C4E43" referencedColumnNames="ID" referencedTableName="RESOURCE_SERVER_POLICY"/>
-
         <createTable tableName="RESOURCE_SCOPE">
             <column name="RESOURCE_ID" type="VARCHAR(36)">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_FARSRSP"/>
@@ -122,9 +108,6 @@
                 <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_FARSRSP"/>
             </column>
         </createTable>
-
-        <addForeignKeyConstraint baseColumnNames="RESOURCE_ID" baseTableName="RESOURCE_SCOPE" constraintName="FK_FRSRPOS13XCX4WNKOG82SSRFY" referencedColumnNames="ID" referencedTableName="RESOURCE_SERVER_RESOURCE"/>
-        <addForeignKeyConstraint baseColumnNames="SCOPE_ID" baseTableName="RESOURCE_SCOPE" constraintName="FK_FRSRPS213XCX4WNKOG82SSRFY" referencedColumnNames="ID" referencedTableName="RESOURCE_SERVER_SCOPE"/>
 
         <createTable tableName="RESOURCE_POLICY">
             <column name="RESOURCE_ID" type="VARCHAR(36)">
@@ -135,9 +118,6 @@
             </column>
         </createTable>
 
-        <addForeignKeyConstraint baseColumnNames="RESOURCE_ID" baseTableName="RESOURCE_POLICY" constraintName="FK_FRSRPOS53XCX4WNKOG82SSRFY" referencedColumnNames="ID" referencedTableName="RESOURCE_SERVER_RESOURCE"/>
-        <addForeignKeyConstraint baseColumnNames="POLICY_ID" baseTableName="RESOURCE_POLICY" constraintName="FK_FRSRPP213XCX4WNKOG82SSRFY" referencedColumnNames="ID" referencedTableName="RESOURCE_SERVER_POLICY"/>
-
         <createTable tableName="SCOPE_POLICY">
             <column name="SCOPE_ID" type="VARCHAR(36)">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_FARSRSPS"/>
@@ -147,9 +127,6 @@
             </column>
         </createTable>
 
-        <addForeignKeyConstraint baseColumnNames="SCOPE_ID" baseTableName="SCOPE_POLICY" constraintName="FK_FRSRPASS3XCX4WNKOG82SSRFY" referencedColumnNames="ID" referencedTableName="RESOURCE_SERVER_SCOPE"/>
-        <addForeignKeyConstraint baseColumnNames="POLICY_ID" baseTableName="SCOPE_POLICY" constraintName="FK_FRSRASP13XCX4WNKOG82SSRFY" referencedColumnNames="ID" referencedTableName="RESOURCE_SERVER_POLICY"/>
-
         <createTable tableName="ASSOCIATED_POLICY">
             <column name="POLICY_ID" type="VARCHAR(36)">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_FARSRPAP"/>
@@ -158,6 +135,38 @@
                 <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_FARSRPAP"/>
             </column>
         </createTable>
+    </changeSet>
+
+    <changeSet author="jakub.danek@yoso.fi" id="authz-2.0.0-2">
+
+        <preConditions onSqlOutput="TEST" onFail="MARK_RAN">
+            <not>
+                <changeSetExecuted id="authz-2.0.0" author="psilva@redhat.com" changeLogFile="META-INF/jpa-changelog-authz-2.0.0.xml"/>
+            </not>
+            <dbms type="mysql" />
+        </preConditions>
+
+        <addUniqueConstraint columnNames="CLIENT_ID" constraintName="UK_AU8TT6T700S9V50BU18WS5HA6" tableName="RESOURCE_SERVER"/>
+
+        <addForeignKeyConstraint baseColumnNames="RESOURCE_SERVER_ID" baseTableName="RESOURCE_SERVER_RESOURCE" constraintName="FK_FRSRHO213XCX4WNKOG82SSRFY" referencedColumnNames="ID" referencedTableName="RESOURCE_SERVER"/>
+        <addUniqueConstraint columnNames="NAME,OWNER,RESOURCE_SERVER_ID" constraintName="UK_FRSR6T700S9V50BU18WS5HA6" tableName="RESOURCE_SERVER_RESOURCE"/>
+
+        <addForeignKeyConstraint baseColumnNames="RESOURCE_SERVER_ID" baseTableName="RESOURCE_SERVER_SCOPE" constraintName="FK_FRSRSO213XCX4WNKOG82SSRFY" referencedColumnNames="ID" referencedTableName="RESOURCE_SERVER"/>
+        <addUniqueConstraint columnNames="NAME,RESOURCE_SERVER_ID" constraintName="UK_FRSRST700S9V50BU18WS5HA6" tableName="RESOURCE_SERVER_SCOPE"/>
+
+        <addForeignKeyConstraint baseColumnNames="RESOURCE_SERVER_ID" baseTableName="RESOURCE_SERVER_POLICY" constraintName="FK_FRSRPO213XCX4WNKOG82SSRFY" referencedColumnNames="ID" referencedTableName="RESOURCE_SERVER"/>
+        <addUniqueConstraint columnNames="NAME,RESOURCE_SERVER_ID" constraintName="UK_FRSRPT700S9V50BU18WS5HA6" tableName="RESOURCE_SERVER_POLICY"/>
+
+        <addForeignKeyConstraint baseColumnNames="POLICY_ID" baseTableName="POLICY_CONFIG" constraintName="FKDC34197CF864C4E43" referencedColumnNames="ID" referencedTableName="RESOURCE_SERVER_POLICY"/>
+
+        <addForeignKeyConstraint baseColumnNames="RESOURCE_ID" baseTableName="RESOURCE_SCOPE" constraintName="FK_FRSRPOS13XCX4WNKOG82SSRFY" referencedColumnNames="ID" referencedTableName="RESOURCE_SERVER_RESOURCE"/>
+        <addForeignKeyConstraint baseColumnNames="SCOPE_ID" baseTableName="RESOURCE_SCOPE" constraintName="FK_FRSRPS213XCX4WNKOG82SSRFY" referencedColumnNames="ID" referencedTableName="RESOURCE_SERVER_SCOPE"/>
+
+        <addForeignKeyConstraint baseColumnNames="RESOURCE_ID" baseTableName="RESOURCE_POLICY" constraintName="FK_FRSRPOS53XCX4WNKOG82SSRFY" referencedColumnNames="ID" referencedTableName="RESOURCE_SERVER_RESOURCE"/>
+        <addForeignKeyConstraint baseColumnNames="POLICY_ID" baseTableName="RESOURCE_POLICY" constraintName="FK_FRSRPP213XCX4WNKOG82SSRFY" referencedColumnNames="ID" referencedTableName="RESOURCE_SERVER_POLICY"/>
+
+        <addForeignKeyConstraint baseColumnNames="SCOPE_ID" baseTableName="SCOPE_POLICY" constraintName="FK_FRSRPASS3XCX4WNKOG82SSRFY" referencedColumnNames="ID" referencedTableName="RESOURCE_SERVER_SCOPE"/>
+        <addForeignKeyConstraint baseColumnNames="POLICY_ID" baseTableName="SCOPE_POLICY" constraintName="FK_FRSRASP13XCX4WNKOG82SSRFY" referencedColumnNames="ID" referencedTableName="RESOURCE_SERVER_POLICY"/>
 
         <addForeignKeyConstraint baseColumnNames="POLICY_ID" baseTableName="ASSOCIATED_POLICY" constraintName="FK_FRSRPAS14XCX4WNKOG82SSRFY" referencedColumnNames="ID" referencedTableName="RESOURCE_SERVER_POLICY"/>
         <addForeignKeyConstraint baseColumnNames="ASSOCIATED_POLICY_ID" baseTableName="ASSOCIATED_POLICY" constraintName="FK_FRSR5S213XCX4WNKOG82SSRFY" referencedColumnNames="ID" referencedTableName="RESOURCE_SERVER_POLICY"/>
