@@ -17,8 +17,11 @@
   -->
 
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
-    <changeSet author="bburke@redhat.com" id="1.4.0">
+    <changeSet author="jakub.danek@yoso.fi" id="1.4.0-1">
         <preConditions onSqlOutput="TEST" onFail="MARK_RAN">
+            <not>
+                <changeSetExecuted id="1.4.0" author="bburke@redhat.com" changeLogFile="META-INF/jpa-changelog-1.4.0.xml"/>
+            </not>
             <dbms type="mysql" />
         </preConditions>
 
@@ -29,7 +32,56 @@
         <delete tableName="CLIENT_SESSION"/>
         <delete tableName="USER_SESSION_NOTE"/>
         <delete tableName="USER_SESSION"/>
+    </changeSet>
 
+    <changeSet author="jakub.danek@yoso.fi" id="1.4.0-2">
+        <preConditions onSqlOutput="TEST" onFail="MARK_RAN">
+            <not>
+                <changeSetExecuted id="1.4.0" author="bburke@redhat.com" changeLogFile="META-INF/jpa-changelog-1.4.0.xml"/>
+            </not>
+            <dbms type="mysql" />
+        </preConditions>
+        <createTable tableName="CLIENT_USER_SESSION_NOTE">
+            <column name="NAME" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTR_CL_USR_SES_NOTE"/>
+            </column>
+            <column name="VALUE" type="VARCHAR(2048)"/>
+            <column name="CLIENT_SESSION" type="VARCHAR(36)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTR_CL_USR_SES_NOTE"/>
+            </column>
+        </createTable>
+        <createTable tableName="REQUIRED_ACTION_PROVIDER">
+            <column name="ID" type="VARCHAR(36)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_REQ_ACT_PRV_PK"/>
+            </column>
+            <column name="ALIAS" type="VARCHAR(255)"/>
+            <column name="NAME" type="VARCHAR(255)"/>
+            <column name="REALM_ID" type="VARCHAR(36)"/>
+            <column name="ENABLED" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DEFAULT_ACTION" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PROVIDER_ID" type="VARCHAR(255)"/>
+        </createTable>
+        <createTable tableName="REQUIRED_ACTION_CONFIG">
+            <column name="REQUIRED_ACTION_ID" type="VARCHAR(36)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_REQ_ACT_CFG_PK"/>
+            </column>
+            <column name="VALUE" type="CLOB"/>
+            <column name="NAME" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_REQ_ACT_CFG_PK"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="jakub.danek@yoso.fi" id="1.4.0-3">
+        <preConditions onSqlOutput="TEST" onFail="MARK_RAN">
+            <not>
+                <changeSetExecuted id="1.4.0" author="bburke@redhat.com" changeLogFile="META-INF/jpa-changelog-1.4.0.xml"/>
+            </not>
+            <dbms type="mysql" />
+        </preConditions>
         <addColumn tableName="CLIENT">
             <column name="SERVICE_ACCOUNTS_ENABLED" type="BOOLEAN" defaultValueBoolean="false">
                 <constraints nullable="false"/>
@@ -118,40 +170,6 @@
             <column name="CURRENT_ACTION" value="LOGGED_OUT"/>
             <where>ACTION = 9</where>
         </update>
-
-        <createTable tableName="CLIENT_USER_SESSION_NOTE">
-            <column name="NAME" type="VARCHAR(255)">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTR_CL_USR_SES_NOTE"/>
-            </column>
-            <column name="VALUE" type="VARCHAR(2048)"/>
-            <column name="CLIENT_SESSION" type="VARCHAR(36)">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTR_CL_USR_SES_NOTE"/>
-            </column>
-        </createTable>
-        <createTable tableName="REQUIRED_ACTION_PROVIDER">
-            <column name="ID" type="VARCHAR(36)">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_REQ_ACT_PRV_PK"/>
-            </column>
-            <column name="ALIAS" type="VARCHAR(255)"/>
-            <column name="NAME" type="VARCHAR(255)"/>
-            <column name="REALM_ID" type="VARCHAR(36)"/>
-            <column name="ENABLED" type="BOOLEAN" defaultValueBoolean="false">
-                <constraints nullable="false"/>
-            </column>
-            <column name="DEFAULT_ACTION" type="BOOLEAN" defaultValueBoolean="false">
-                <constraints nullable="false"/>
-            </column>
-            <column name="PROVIDER_ID" type="VARCHAR(255)"/>
-        </createTable>
-        <createTable tableName="REQUIRED_ACTION_CONFIG">
-            <column name="REQUIRED_ACTION_ID" type="VARCHAR(36)">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_REQ_ACT_CFG_PK"/>
-            </column>
-            <column name="VALUE" type="CLOB"/>
-            <column name="NAME" type="VARCHAR(255)">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_REQ_ACT_CFG_PK"/>
-            </column>
-        </createTable>
 
         <customChange class="org.keycloak.connections.jpa.updater.liquibase.custom.JpaUpdate1_4_0_Final"/>
 
