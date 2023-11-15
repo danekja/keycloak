@@ -17,7 +17,7 @@
   -->
 
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
-    <changeSet author="psilva@redhat.com" id="authz-4.0.0.CR1">
+    <changeSet author="jakub.danek@yoso.fi" id="authz-4.0.0.CR1-1">
 
         <preConditions onSqlOutput="TEST" onFail="MARK_RAN">
             <not>
@@ -53,6 +53,28 @@
             </column>
         </createTable>
 
+        <createTable tableName="RESOURCE_ATTRIBUTE">
+            <column name="ID" type="VARCHAR(36)" defaultValue="sybase-needs-something-here">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="RES_ATTR_PK"/>
+            </column>
+            <column name="NAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="VALUE" type="VARCHAR(255)"/>
+            <column name="RESOURCE_ID" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="jakub.danek@yoso.fi" id="authz-4.0.0.CR1-2">
+
+        <preConditions onSqlOutput="TEST" onFail="MARK_RAN">
+            <not>
+                <changeSetExecuted id="authz-4.0.0.CR1" author="psilva@redhat.com" changeLogFile="META-INF/jpa-changelog-authz-4.0.0.CR1.xml"/>
+            </not>
+            <dbms type="mysql" />
+        </preConditions>
         <addForeignKeyConstraint baseColumnNames="RESOURCE_SERVER_ID" baseTableName="RESOURCE_SERVER_PERM_TICKET" constraintName="FK_FRSRHO213XCX4WNKOG82SSPMT" referencedColumnNames="ID" referencedTableName="RESOURCE_SERVER"/>
         <addForeignKeyConstraint baseColumnNames="RESOURCE_ID" baseTableName="RESOURCE_SERVER_PERM_TICKET" constraintName="FK_FRSRHO213XCX4WNKOG83SSPMT" referencedColumnNames="ID" referencedTableName="RESOURCE_SERVER_RESOURCE"/>
         <addForeignKeyConstraint baseColumnNames="SCOPE_ID" baseTableName="RESOURCE_SERVER_PERM_TICKET" constraintName="FK_FRSRHO213XCX4WNKOG84SSPMT" referencedColumnNames="ID" referencedTableName="RESOURCE_SERVER_SCOPE"/>
@@ -81,19 +103,6 @@
                 <constraints nullable="false"/>
             </column>
         </addColumn>
-
-        <createTable tableName="RESOURCE_ATTRIBUTE">
-            <column name="ID" type="VARCHAR(36)" defaultValue="sybase-needs-something-here">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="RES_ATTR_PK"/>
-            </column>
-            <column name="NAME" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="VALUE" type="VARCHAR(255)"/>
-            <column name="RESOURCE_ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
 
         <addForeignKeyConstraint baseColumnNames="RESOURCE_ID" baseTableName="RESOURCE_ATTRIBUTE" constraintName="FK_5HRM2VLF9QL5FU022KQEPOVBR" referencedColumnNames="ID" referencedTableName="RESOURCE_SERVER_RESOURCE"/>
     </changeSet>
