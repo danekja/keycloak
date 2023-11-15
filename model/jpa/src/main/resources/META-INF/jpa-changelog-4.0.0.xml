@@ -19,7 +19,7 @@
 
     <changeSet author="bburke@redhat.com" id="4.0.0-KEYCLOAK-6335">
         <validCheckSum>7:d8dc5d89c789105cfa7ca0e82cba60af</validCheckSum>
-        <preConditions>
+        <preConditions onSqlOutput="TEST" onFail="MARK_RAN">
             <not>
                 <dbms type="mysql" />
             </not>

@@ -17,7 +17,7 @@
   -->
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet author="bburke@redhat.com" id="4.0.0-KEYCLOAK-6335">
+    <changeSet author="jakub.danek@yoso.fi" id="4.0.0-KEYCLOAK-6335">
 
         <preConditions onSqlOutput="TEST" onFail="MARK_RAN">
             <not>
@@ -37,11 +37,13 @@
         </createTable>
     </changeSet>
 
-    <changeSet author="mposolda@redhat.com" id="4.0.0-KEYCLOAK-5579-fixed">
-        <validCheckSum>7:6d4893e36de22369cf73bcb051ded875</validCheckSum>
+    <changeSet author="jakub.danek@yoso.fi" id="4.0.0-KEYCLOAK-5579-1">
         <preConditions onFail="MARK_RAN" onSqlOutput="TEST">
             <not>
                 <changeSetExecuted id="4.0.0-KEYCLOAK-5579" author="mposolda@redhat.com" changeLogFile="META-INF/jpa-changelog-4.0.0.xml" />
+            </not>
+            <not>
+                <changeSetExecuted id="4.0.0-KEYCLOAK-5579-fixed" author="mposolda@redhat.com" changeLogFile="META-INF/jpa-changelog-4.0.0.xml" />
             </not>
             <dbms type="mysql"/>
         </preConditions>
@@ -105,7 +107,19 @@
         <addForeignKeyConstraint baseTableName="CLIENT_SCOPE_ATTRIBUTES" baseColumnNames="SCOPE_ID"
                                  constraintName="FK_CL_SCOPE_ATTR_SCOPE" referencedTableName="CLIENT_SCOPE" referencedColumnNames="ID" />
 
+    </changeSet>
+
         <!-- 2 - Client binding to more clientScopes -->
+    <changeSet author="jakub.danek@yoso.fi" id="4.0.0-KEYCLOAK-5579-2">
+        <preConditions onFail="MARK_RAN" onSqlOutput="TEST">
+            <not>
+                <changeSetExecuted id="4.0.0-KEYCLOAK-5579" author="mposolda@redhat.com" changeLogFile="META-INF/jpa-changelog-4.0.0.xml" />
+            </not>
+            <not>
+                <changeSetExecuted id="4.0.0-KEYCLOAK-5579-fixed" author="mposolda@redhat.com" changeLogFile="META-INF/jpa-changelog-4.0.0.xml" />
+            </not>
+            <dbms type="mysql"/>
+        </preConditions>
         <createTable tableName="CLIENT_SCOPE_CLIENT">
             <column name="CLIENT_ID" type="VARCHAR(36)">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="C_CLI_SCOPE_BIND"/>
@@ -117,6 +131,17 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+    </changeSet>
+    <changeSet author="jakub.danek@yoso.fi" id="4.0.0-KEYCLOAK-5579-3">
+        <preConditions onFail="MARK_RAN" onSqlOutput="TEST">
+            <not>
+                <changeSetExecuted id="4.0.0-KEYCLOAK-5579" author="mposolda@redhat.com" changeLogFile="META-INF/jpa-changelog-4.0.0.xml" />
+            </not>
+            <not>
+                <changeSetExecuted id="4.0.0-KEYCLOAK-5579-fixed" author="mposolda@redhat.com" changeLogFile="META-INF/jpa-changelog-4.0.0.xml" />
+            </not>
+            <dbms type="mysql"/>
+        </preConditions>
         <addForeignKeyConstraint baseColumnNames="CLIENT_ID" baseTableName="CLIENT_SCOPE_CLIENT" constraintName="FK_C_CLI_SCOPE_CLIENT" referencedColumnNames="ID" referencedTableName="CLIENT"/>
         <addForeignKeyConstraint baseColumnNames="SCOPE_ID" baseTableName="CLIENT_SCOPE_CLIENT" constraintName="FK_C_CLI_SCOPE_SCOPE" referencedColumnNames="ID" referencedTableName="CLIENT_SCOPE"/>
 
@@ -129,8 +154,18 @@
         <dropColumn tableName="CLIENT" columnName="USE_TEMPLATE_CONFIG" />
         <dropColumn tableName="CLIENT" columnName="USE_TEMPLATE_SCOPE" />
         <dropColumn tableName="CLIENT" columnName="USE_TEMPLATE_MAPPERS" />
-
+    </changeSet>
         <!-- Default client scopes (global scopes configured at realm level) -->
+    <changeSet author="jakub.danek@yoso.fi" id="4.0.0-KEYCLOAK-5579-4">
+        <preConditions onFail="MARK_RAN" onSqlOutput="TEST">
+            <not>
+                <changeSetExecuted id="4.0.0-KEYCLOAK-5579" author="mposolda@redhat.com" changeLogFile="META-INF/jpa-changelog-4.0.0.xml" />
+            </not>
+            <not>
+                <changeSetExecuted id="4.0.0-KEYCLOAK-5579-fixed" author="mposolda@redhat.com" changeLogFile="META-INF/jpa-changelog-4.0.0.xml" />
+            </not>
+            <dbms type="mysql"/>
+        </preConditions>
         <createTable tableName="DEFAULT_CLIENT_SCOPE">
             <column name="REALM_ID" type="VARCHAR(36)">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="R_DEF_CLI_SCOPE_BIND"/>
@@ -142,6 +177,17 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+    </changeSet>
+    <changeSet author="jakub.danek@yoso.fi" id="4.0.0-KEYCLOAK-5579-5">
+        <preConditions onFail="MARK_RAN" onSqlOutput="TEST">
+            <not>
+                <changeSetExecuted id="4.0.0-KEYCLOAK-5579" author="mposolda@redhat.com" changeLogFile="META-INF/jpa-changelog-4.0.0.xml" />
+            </not>
+            <not>
+                <changeSetExecuted id="4.0.0-KEYCLOAK-5579-fixed" author="mposolda@redhat.com" changeLogFile="META-INF/jpa-changelog-4.0.0.xml" />
+            </not>
+            <dbms type="mysql"/>
+        </preConditions>
         <addForeignKeyConstraint baseColumnNames="REALM_ID" baseTableName="DEFAULT_CLIENT_SCOPE" constraintName="FK_R_DEF_CLI_SCOPE_REALM" referencedColumnNames="ID" referencedTableName="REALM"/>
         <addForeignKeyConstraint baseColumnNames="SCOPE_ID" baseTableName="DEFAULT_CLIENT_SCOPE" constraintName="FK_R_DEF_CLI_SCOPE_SCOPE" referencedColumnNames="ID" referencedTableName="CLIENT_SCOPE"/>
 
@@ -153,8 +199,18 @@
         <dropDefaultValue tableName="PROTOCOL_MAPPER" columnName="CONSENT_REQUIRED" />
         <dropColumn tableName="PROTOCOL_MAPPER" columnName="CONSENT_REQUIRED" />
         <dropColumn tableName="PROTOCOL_MAPPER" columnName="CONSENT_TEXT" />
-
+    </changeSet>
         <!-- Consents related changes -->
+    <changeSet author="jakub.danek@yoso.fi" id="4.0.0-KEYCLOAK-5579-6">
+        <preConditions onFail="MARK_RAN" onSqlOutput="TEST">
+            <not>
+                <changeSetExecuted id="4.0.0-KEYCLOAK-5579" author="mposolda@redhat.com" changeLogFile="META-INF/jpa-changelog-4.0.0.xml" />
+            </not>
+            <not>
+                <changeSetExecuted id="4.0.0-KEYCLOAK-5579-fixed" author="mposolda@redhat.com" changeLogFile="META-INF/jpa-changelog-4.0.0.xml" />
+            </not>
+            <dbms type="mysql"/>
+        </preConditions>
         <dropForeignKeyConstraint baseTableName="USER_CONSENT_ROLE" constraintName="FK_GRNTCSNT_ROLE_GR" />
         <dropTable tableName="USER_CONSENT_ROLE" />
         <dropForeignKeyConstraint baseTableName="USER_CONSENT_PROT_MAPPER" constraintName="FK_GRNTCSNT_PRM_GR" />
@@ -168,12 +224,6 @@
                 <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_GRNTCSNT_CLSC_PM"/>
             </column>
         </createTable>
-        <addForeignKeyConstraint baseColumnNames="USER_CONSENT_ID" baseTableName="USER_CONSENT_CLIENT_SCOPE" constraintName="FK_GRNTCSNT_CLSC_USC" referencedColumnNames="ID" referencedTableName="USER_CONSENT"/>
-
-        <!-- Federated consents related changes -->
-        <dropTable tableName="FED_USER_CONSENT_ROLE" />
-        <dropTable tableName="FED_USER_CONSENT_PROT_MAPPER" />
-
         <createTable tableName="FED_USER_CONSENT_CL_SCOPE">
             <column name="USER_CONSENT_ID" type="VARCHAR(36)">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_FGRNTCSNT_CLSC_PM"/>
@@ -182,7 +232,33 @@
                 <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_FGRNTCSNT_CLSC_PM"/>
             </column>
         </createTable>
+    </changeSet>
+    <changeSet author="jakub.danek@yoso.fi" id="4.0.0-KEYCLOAK-5579-7">
+        <preConditions onFail="MARK_RAN" onSqlOutput="TEST">
+            <not>
+                <changeSetExecuted id="4.0.0-KEYCLOAK-5579" author="mposolda@redhat.com" changeLogFile="META-INF/jpa-changelog-4.0.0.xml" />
+            </not>
+            <not>
+                <changeSetExecuted id="4.0.0-KEYCLOAK-5579-fixed" author="mposolda@redhat.com" changeLogFile="META-INF/jpa-changelog-4.0.0.xml" />
+            </not>
+            <dbms type="mysql"/>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="USER_CONSENT_ID" baseTableName="USER_CONSENT_CLIENT_SCOPE" constraintName="FK_GRNTCSNT_CLSC_USC" referencedColumnNames="ID" referencedTableName="USER_CONSENT"/>
 
+        <!-- Federated consents related changes -->
+        <dropTable tableName="FED_USER_CONSENT_ROLE" />
+        <dropTable tableName="FED_USER_CONSENT_PROT_MAPPER" />
+    </changeSet>
+    <changeSet author="jakub.danek@yoso.fi" id="4.0.0-KEYCLOAK-5579-8">
+        <preConditions onFail="MARK_RAN" onSqlOutput="TEST">
+            <not>
+                <changeSetExecuted id="4.0.0-KEYCLOAK-5579" author="mposolda@redhat.com" changeLogFile="META-INF/jpa-changelog-4.0.0.xml" />
+            </not>
+            <not>
+                <changeSetExecuted id="4.0.0-KEYCLOAK-5579-fixed" author="mposolda@redhat.com" changeLogFile="META-INF/jpa-changelog-4.0.0.xml" />
+            </not>
+            <dbms type="mysql"/>
+        </preConditions>
         <!-- Indexes for foreign keys -->
         <createIndex indexName="IDX_REALM_CLSCOPE" tableName="CLIENT_SCOPE">
             <column name="REALM_ID" type="VARCHAR(36)"/>
