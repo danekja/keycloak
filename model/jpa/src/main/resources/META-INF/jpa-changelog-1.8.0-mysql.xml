@@ -17,9 +17,11 @@
   -->
 
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
-    <changeSet author="mposolda@redhat.com" id="1.8.0">
-        <validCheckSum>7:c31d1646dfa2618a9335c00e07f89f24</validCheckSum>
+    <changeSet author="jakub.danek@yoso.fi" id="1.8.0-1">
         <preConditions onSqlOutput="TEST" onFail="MARK_RAN">
+            <not>
+                <changeSetExecuted id="1.8.0" author="mposolda@redhat.com" changeLogFile="META-INF/jpa-changelog-1.8.0.xml" />
+            </not>
             <dbms type="mysql" />
         </preConditions>
 
@@ -82,7 +84,23 @@
             </column>
         </createTable>
 
+        <createTable tableName="REALM_CLIENT_TEMPLATE">
+            <column name="CLIENT_TEMPLATE_ID" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REALM_ID" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
 
+    </changeSet>
+    <changeSet author="jakub.danek@yoso.fi" id="1.8.0-2">
+        <preConditions onSqlOutput="TEST" onFail="MARK_RAN">
+            <not>
+                <changeSetExecuted id="1.8.0" author="mposolda@redhat.com" changeLogFile="META-INF/jpa-changelog-1.8.0.xml" />
+            </not>
+            <dbms type="mysql" />
+        </preConditions>
 
         <dropNotNullConstraint tableName="PROTOCOL_MAPPER" columnName="CLIENT_ID" columnDataType="VARCHAR(36)"/>
         <addColumn tableName="CLIENT">
@@ -104,14 +122,6 @@
                 <constraints nullable="true"/>
             </column>
          </addColumn>
-        <createTable tableName="REALM_CLIENT_TEMPLATE">
-            <column name="CLIENT_TEMPLATE_ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="REALM_ID" type="VARCHAR(36)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
 
         <addUniqueConstraint columnNames="REALM_ID,NAME" constraintName="UK_CLI_TEMPLATE" tableName="CLIENT_TEMPLATE"/>
         <addForeignKeyConstraint baseColumnNames="REALM_ID" baseTableName="CLIENT_TEMPLATE" constraintName="FK_REALM_CLI_TMPLT" referencedColumnNames="ID" referencedTableName="REALM"/>
@@ -130,26 +140,5 @@
 
     </changeSet>
 
-    <changeSet id="1.8.0-2" author="keycloak">
-        <validCheckSum>7:df8bc21027a4f7cbbb01f6344e89ce07</validCheckSum>
-        <preConditions onSqlOutput="TEST" onFail="MARK_RAN">
-            <not>
-                <dbms type="db2" />
-            </not>
-        </preConditions>
-
-        <dropDefaultValue tableName="CREDENTIAL" columnName="ALGORITHM" columnDataType="VARCHAR(36)"/>
-
-        <update tableName="CREDENTIAL">
-            <column name="ALGORITHM" type="VARCHAR(36)" value="pbkdf2" />
-            <where>TYPE in ('password-history', 'password') AND ALGORITHM = 'HmacSHA1'</where>
-        </update>
-
-        <!-- Sybase specific hacks -->
-        <modifySql dbms="sybase">
-            <regExpReplace replace=".*(SET DEFAULT NULL)" with="SELECT 1" />
-        </modifySql>
-
-    </changeSet>
 
 </databaseChangeLog>
